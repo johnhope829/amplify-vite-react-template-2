@@ -9,6 +9,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState([]);
   const [view, setView] = useState('query'); // 'query', 'results', 'insights', 'history'
+  const [isInfoPaneOpen, setIsInfoPaneOpen] = useState(false);
   const [schema, setSchema] = useState([
     { 
       name: 'users', 
@@ -151,7 +152,7 @@ const App = () => {
 
   const renderQueryView = () => (
     <div className="query-panel">
-      <h2>Convert Natural Language to SQL</h2>
+      <h2>Marketing Analytics Agent</h2>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <textarea
@@ -162,7 +163,7 @@ const App = () => {
             rows={4}
           />
           <button type="submit" className="primary-button">
-            {isLoading ? 'Processing...' : 'Generate SQL & Run'}
+            {isLoading ? 'Processing...' : 'Generate Results'}
           </button>
         </div>
       </form>
@@ -354,6 +355,12 @@ const App = () => {
           >
             History
           </button>
+          <button 
+            className={`nav-button ${isInfoPaneOpen ? 'active' : ''}`}
+            onClick={() => setIsInfoPaneOpen(!isInfoPaneOpen)}
+          >
+            Info
+          </button>
         </nav>
         <button className="sign-in-button">Sign In</button>
       </header>
@@ -366,8 +373,50 @@ const App = () => {
       </main>
       
       <footer className="app-footer">
-        <p>SQLWhisperer - Turn natural language into powerful SQL queries</p>
+        <p>Red Light Management - Marketing AI Agent</p>
       </footer>
+
+      {isInfoPaneOpen && (
+        <div className="info-pane">
+          <div className="info-pane-content">
+            <div className="info-pane-header">
+              <h2>About SQLWhisperer</h2>
+              <button 
+                className="close-button"
+                onClick={() => setIsInfoPaneOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="info-pane-body">
+              <section className="info-section">
+                <h3>What is SQLWhisperer?</h3>
+                <p>SQLWhisperer is an AI-powered tool that converts natural language queries into SQL code. Simply describe what data you want to see, and SQLWhisperer will generate the appropriate SQL query.</p>
+              </section>
+
+              <section className="info-section">
+                <h3>How It Works</h3>
+                <ol>
+                  <li>Enter your question in plain English</li>
+                  <li>SQLWhisperer translates your request into SQL</li>
+                  <li>Review and run the generated SQL</li>
+                  <li>Explore results and insights</li>
+                </ol>
+              </section>
+
+              <section className="info-section">
+                <h3>Tips for Better Results</h3>
+                <ul>
+                  <li>Be specific about what tables and columns you want to query</li>
+                  <li>Mention any filters or conditions clearly</li>
+                  <li>Specify how you want data sorted or grouped</li>
+                  <li>Use database terminology when possible</li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+    )}       
     </div>
   );
 };
