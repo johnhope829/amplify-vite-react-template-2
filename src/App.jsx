@@ -324,7 +324,9 @@ const App = () => {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1><span className="text-highlight">SQL</span>Whisperer</h1>
+        <div className="app-logo">
+          <img src="/rlm.png" alt="RLM Marketing" className="app-icon" />
+        </div>
         <nav className="main-nav">
           <button 
             className={`nav-button ${view === 'query' ? 'active' : ''}`}
@@ -353,6 +355,7 @@ const App = () => {
             History
           </button>
         </nav>
+        <button className="sign-in-button">Sign In</button>
       </header>
       
       <main className="app-content">
