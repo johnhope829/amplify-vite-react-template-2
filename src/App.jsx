@@ -486,32 +486,36 @@ const App = () => {
           <img src="/rlm.png" alt="RLM Marketing" className="app-icon" />
         </div>
         <nav className="main-nav">
-          <button 
-            className={`nav-button ${view === 'query' ? 'active' : ''}`}
-            onClick={() => setView('query')}
-          >
-            Query
-          </button>
-          <button 
-            className={`nav-button ${view === 'results' ? 'active' : ''}`}
-            onClick={() => setView('results')}
-            disabled={results.length === 0}
-          >
-            Results
-          </button>
-          <button 
-            className={`nav-button ${view === 'insights' ? 'active' : ''}`}
-            onClick={() => setView('insights')}
-            disabled={insights.length === 0}
-          >
-            Insights
-          </button>
-          <button 
-            className={`nav-button ${view === 'history' ? 'active' : ''}`}
-            onClick={() => setView('history')}
-          >
-            History
-          </button>
+          {currentPage === 'Marketing Insights' && (
+            <>
+              <button 
+                className={`nav-button ${view === 'query' ? 'active' : ''}`}
+                onClick={() => setView('query')}
+              >
+                Query
+              </button>
+              <button 
+                className={`nav-button ${view === 'results' ? 'active' : ''}`}
+                onClick={() => setView('results')}
+                disabled={results.length === 0}
+              >
+                Results
+              </button>
+              <button 
+                className={`nav-button ${view === 'insights' ? 'active' : ''}`}
+                onClick={() => setView('insights')}
+                disabled={insights.length === 0}
+              >
+                Insights
+              </button>
+              <button 
+                className={`nav-button ${view === 'history' ? 'active' : ''}`}
+                onClick={() => setView('history')}
+              >
+                History
+              </button>
+            </>
+          )}
           <button 
             className={`nav-button ${isInfoPaneOpen ? 'active' : ''}`}
             onClick={() => setIsInfoPaneOpen(!isInfoPaneOpen)}
@@ -521,7 +525,6 @@ const App = () => {
         </nav>
         <button className="sign-in-button">Sign In</button>
       </header>
-      
       <div className="app-content-container">
         <div className="side-nav">
           <button 
