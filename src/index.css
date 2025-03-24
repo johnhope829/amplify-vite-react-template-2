@@ -45,6 +45,16 @@ body {
   color: var(--text-dark);
   background-color: white;
   line-height: 1.6;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 code, pre {

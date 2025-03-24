@@ -1,6 +1,141 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const UpcomingShows = () => {
+  const [shows, setShows] = useState([
+    { 
+      id: 1, 
+      artist: 'The Lumineers', 
+      venue: 'Red Rocks Amphitheatre', 
+      date: '2024-07-15', 
+      city: 'Morrison, CO' 
+    },
+    { 
+      id: 2, 
+      artist: 'Khruangbin', 
+      venue: 'Greek Theatre', 
+      date: '2024-08-22', 
+      city: 'Berkeley, CA' 
+    },
+    { 
+      id: 3, 
+      artist: 'Leon Bridges', 
+      venue: 'Stubb\'s Amphitheater', 
+      date: '2024-09-05', 
+      city: 'Austin, TX' 
+    }
+  ]);
+
+  return (
+    <div className="upcoming-shows-panel">
+      <h2>Upcoming Shows</h2>
+      <div className="shows-list">
+        {shows.map(show => (
+          <div key={show.id} className="show-card">
+            <h3>{show.artist}</h3>
+            <p>{show.venue}</p>
+            <p>{show.city}</p>
+            <p>{new Date(show.date).toLocaleDateString('en-US', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const PastShows = () => {
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [shows, setShows] = useState([
+    { 
+      id: 1, 
+      artist: 'Bon Iver', 
+      venue: 'Red Rocks Amphitheatre', 
+      date: '2023-06-15', 
+      city: 'Morrison, CO',
+      metrics: {
+        totalTicketsSold: 8500,
+        revenue: 595000,
+        averageTicketPrice: 70,
+        socialMediaReach: 125000
+      }
+    },
+    { 
+      id: 2, 
+      artist: 'The National', 
+      venue: 'Greek Theatre', 
+      date: '2023-07-22', 
+      city: 'Berkeley, CA',
+      metrics: {
+        totalTicketsSold: 7200,
+        revenue: 504000,
+        averageTicketPrice: 70,
+        socialMediaReach: 95000
+      }
+    }
+  ]);
+
+  const renderShowDetails = (show) => (
+    <div className="show-details">
+      <h2>{show.artist} - Show Report</h2>
+      <div className="show-metrics">
+        <div className="metric-card">
+          <h3>Tickets Sold</h3>
+          <p>{show.metrics.totalTicketsSold}</p>
+        </div>
+        <div className="metric-card">
+          <h3>Total Revenue</h3>
+          <p>${show.metrics.revenue.toLocaleString()}</p>
+        </div>
+        <div className="metric-card">
+          <h3>Avg. Ticket Price</h3>
+          <p>${show.metrics.averageTicketPrice}</p>
+        </div>
+        <div className="metric-card">
+          <h3>Social Media Reach</h3>
+          <p>{show.metrics.socialMediaReach.toLocaleString()}</p>
+        </div>
+      </div>
+      <button onClick={() => setSelectedShow(null)}>Back to Past Shows</button>
+    </div>
+  );
+
+  return (
+    <div className="past-shows-panel">
+      {selectedShow ? (
+        renderShowDetails(selectedShow)
+      ) : (
+        <>
+          <h2>Past Shows</h2>
+          <div className="shows-list">
+            {shows.map(show => (
+              <div 
+                key={show.id} 
+                className="show-card"
+                onClick={() => setSelectedShow(show)}
+              >
+                <h3>{show.artist}</h3>
+                <p>{show.venue}</p>
+                <p>{show.city}</p>
+                <p>{new Date(show.date).toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 const App = () => {
   const [query, setQuery] = useState('');
   const [sqlQuery, setSqlQuery] = useState('');
@@ -8,6 +143,7 @@ const App = () => {
   const [insights, setInsights] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  const [currentPage, setCurrentPage] = useState('Marketing Insights');
   const [view, setView] = useState('query'); // 'query', 'results', 'insights', 'history'
   const [isInfoPaneOpen, setIsInfoPaneOpen] = useState(false);
   const [schema, setSchema] = useState([
@@ -320,7 +456,28 @@ const App = () => {
         )}
       </div>
     </div>
-  );
+  );  
+
+  // Render function based on current page
+  const renderCurrentPage = () => {
+    switch(currentPage) {
+      case 'Marketing Insights':
+        return (
+          <>
+            {view === 'query' && renderQueryView()}
+            {view === 'results' && renderResultsView()}
+            {view === 'insights' && renderInsightsView()}
+            {view === 'history' && renderHistoryView()}
+          </>
+        );
+      case 'Upcoming Shows':
+        return <UpcomingShows />;
+      case 'Past Shows':
+        return <PastShows />;
+      default:
+        return <div>Page not found</div>;
+    }
+  };
 
   return (
     <div className="app-container">
@@ -365,12 +522,32 @@ const App = () => {
         <button className="sign-in-button">Sign In</button>
       </header>
       
-      <main className="app-content">
-        {view === 'query' && renderQueryView()}
-        {view === 'results' && renderResultsView()}
-        {view === 'insights' && renderInsightsView()}
-        {view === 'history' && renderHistoryView()}
-      </main>
+      <div className="app-content-container">
+        <div className="side-nav">
+          <button 
+            className={`side-nav-button ${currentPage === 'Marketing Insights' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('Marketing Insights')}
+          >
+            Marketing Insights
+          </button>
+          <button 
+            className={`side-nav-button ${currentPage === 'Upcoming Shows' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('Upcoming Shows')}
+          >
+            Upcoming Shows
+          </button>
+          <button 
+            className={`side-nav-button ${currentPage === 'Past Shows' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('Past Shows')}
+          >
+            Past Shows
+          </button>
+        </div>
+        
+        <main className="app-content">
+          {renderCurrentPage()}
+        </main>
+      </div>
       
       <footer className="app-footer">
         <p>Red Light Management - Marketing AI Agent</p>
