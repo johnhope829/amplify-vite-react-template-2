@@ -1,5 +1,3 @@
-/* App.css - Styling for SQLWhisperer application */
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -668,4 +666,26 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: #2b5876;
+}
+
+.artist-query-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.similar-artists-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.show-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.similar-artists-list {
+  margin-top: 1rem;
 }

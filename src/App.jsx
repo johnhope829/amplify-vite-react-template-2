@@ -1,6 +1,98 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const SimilarArtistDetails = ({ artist }) => {
+  const [query, setQuery] = useState('');
+  const [similarArtists, setSimilarArtists] = useState([
+    { 
+      id: 1, 
+      artist: 'The Avett Brothers', 
+      venue: 'Red Rocks Amphitheatre', 
+      date: '2024-07-20', 
+      city: 'Morrison, CO',
+      metrics: {
+        totalTicketsSold: 9000,
+        revenue: 630000,
+        averageTicketPrice: 70,
+        socialMediaReach: 145000
+      }
+    },
+    { 
+      id: 2, 
+      artist: 'Lord Huron', 
+      venue: 'Greek Theatre', 
+      date: '2024-08-25', 
+      city: 'Berkeley, CA',
+      metrics: {
+        totalTicketsSold: 7800,
+        revenue: 546000,
+        averageTicketPrice: 70,
+        socialMediaReach: 110000
+      }
+    }
+  ]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // In a real app, this would trigger an AI-powered query about the artist
+    alert(`Searching for information about ${artist} related to: ${query}`);
+  };
+
+  return (
+    <div className="similar-artists-panel">
+      <h2>Information from Similar Artists</h2>
+      
+      <form onSubmit={handleSubmit} className="artist-query-form">
+        <input 
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={`Ask a question about ${artist} or similar artists`}
+          className="query-input"
+        />
+        <button type="submit" className="primary-button">Search</button>
+      </form>
+
+      <div className="similar-artists-list">
+        <h3>Similar Artist Shows</h3>
+        <div className="shows-list">
+          {similarArtists.map(show => (
+            <div key={show.id} className="show-card">
+              <h3>{show.artist}</h3>
+              <p>{show.venue}</p>
+              <p>{show.city}</p>
+              <p>{new Date(show.date).toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}</p>
+              <div className="show-metrics">
+                <div className="metric-card">
+                  <h3>Tickets Sold</h3>
+                  <p>{show.metrics.totalTicketsSold}</p>
+                </div>
+                <div className="metric-card">
+                  <h3>Total Revenue</h3>
+                  <p>${show.metrics.revenue.toLocaleString()}</p>
+                </div>
+                <div className="metric-card">
+                  <h3>Avg. Ticket Price</h3>
+                  <p>${show.metrics.averageTicketPrice}</p>
+                </div>
+                <div className="metric-card">
+                  <h3>Social Media Reach</h3>
+                  <p>{show.metrics.socialMediaReach.toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const UpcomingShows = () => {
   const [shows, setShows] = useState([
     { 
@@ -8,42 +100,115 @@ const UpcomingShows = () => {
       artist: 'The Lumineers', 
       venue: 'Red Rocks Amphitheatre', 
       date: '2024-07-15', 
-      city: 'Morrison, CO' 
+      city: 'Morrison, CO',
+      metrics: {
+        totalTicketsSold: 9500,
+        revenue: 665000,
+        averageTicketPrice: 70,
+        socialMediaReach: 250000
+      }
     },
     { 
       id: 2, 
       artist: 'Khruangbin', 
       venue: 'Greek Theatre', 
       date: '2024-08-22', 
-      city: 'Berkeley, CA' 
+      city: 'Berkeley, CA',
+      metrics: {
+        totalTicketsSold: 7200,
+        revenue: 504000,
+        averageTicketPrice: 70,
+        socialMediaReach: 95000
+      }
     },
     { 
       id: 3, 
       artist: 'Leon Bridges', 
       venue: 'Stubb\'s Amphitheater', 
       date: '2024-09-05', 
-      city: 'Austin, TX' 
+      city: 'Austin, TX',
+      metrics: {
+        totalTicketsSold: 6800,
+        revenue: 476000,
+        averageTicketPrice: 70,
+        socialMediaReach: 85000
+      }
     }
   ]);
 
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [showSimilarArtists, setShowSimilarArtists] = useState(false);
+
+  const renderShowDetails = (show) => (
+    <div className="show-details">
+      <button 
+        onClick={() => setSelectedShow(null)} 
+        className="primary-button"
+      >
+        Back to Upcoming Shows
+      </button>
+      
+      <h2>{show.artist} - Show Details</h2>
+      <div className="show-metrics">
+        <div className="metric-card">
+          <h3>Tickets Sold</h3>
+          <p>{show.metrics.totalTicketsSold}</p>
+        </div>
+        <div className="metric-card">
+          <h3>Total Revenue</h3>
+          <p>${show.metrics.revenue.toLocaleString()}</p>
+        </div>
+        <div className="metric-card">
+          <h3>Avg. Ticket Price</h3>
+          <p>${show.metrics.averageTicketPrice}</p>
+        </div>
+        <div className="metric-card">
+          <h3>Social Media Reach</h3>
+          <p>{show.metrics.socialMediaReach.toLocaleString()}</p>
+        </div>
+      </div>
+
+      {!showSimilarArtists ? (
+        <button 
+          onClick={() => setShowSimilarArtists(true)} 
+          className="primary-button"
+        >
+          Information from Similar Artists
+        </button>
+      ) : (
+        <SimilarArtistDetails artist={show.artist} />
+      )}
+    </div>
+  );
+
   return (
     <div className="upcoming-shows-panel">
-      <h2>Upcoming Shows</h2>
-      <div className="shows-list">
-        {shows.map(show => (
-          <div key={show.id} className="show-card">
-            <h3>{show.artist}</h3>
-            <p>{show.venue}</p>
-            <p>{show.city}</p>
-            <p>{new Date(show.date).toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}</p>
+      {selectedShow ? (
+        renderShowDetails(selectedShow)
+      ) : (
+        <>
+          <h2>Upcoming Shows</h2>
+          <div className="shows-list">
+            {shows.map(show => (
+              <div 
+                key={show.id} 
+                className="show-card"
+                onClick={() => setSelectedShow(show)}
+              >
+                <h3>{show.artist}</h3>
+                <p>{show.venue}</p>
+                <p>{show.city}</p>
+                <p>{new Date(show.date).toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
 };
@@ -560,7 +725,7 @@ const App = () => {
         <div className="info-pane">
           <div className="info-pane-content">
             <div className="info-pane-header">
-              <h2>About SQLWhisperer</h2>
+              <h2>About MarketMind</h2>
               <button 
                 className="close-button"
                 onClick={() => setIsInfoPaneOpen(false)}
@@ -570,15 +735,15 @@ const App = () => {
             </div>
             <div className="info-pane-body">
               <section className="info-section">
-                <h3>What is SQLWhisperer?</h3>
-                <p>SQLWhisperer is an AI-powered tool that converts natural language queries into SQL code. Simply describe what data you want to see, and SQLWhisperer will generate the appropriate SQL query.</p>
+                <h3>What is MarketMind?</h3>
+                <p>MarketMind is an AI-powered tool that converts natural language queries into SQL code. Simply describe what data you want to see, and MarketMind will generate the appropriate SQL query.</p>
               </section>
 
               <section className="info-section">
                 <h3>How It Works</h3>
                 <ol>
                   <li>Enter your question in plain English</li>
-                  <li>SQLWhisperer translates your request into SQL</li>
+                  <li>MarketMind translates your request into SQL</li>
                   <li>Review and run the generated SQL</li>
                   <li>Explore results and insights</li>
                 </ol>
